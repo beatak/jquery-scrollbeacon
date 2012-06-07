@@ -1,6 +1,5 @@
 (
 function ($, window) {
-
   "use strict";
 
   var scrollers = [];
@@ -17,8 +16,6 @@ function ($, window) {
     disappear: null,
     positionchange: null
   };
-
-  window.scrollers = scrollers;
 
   var EV_POSTIONCHANGE = 'positionchange.scrolling';
   var EV_APPEAR = 'appear.scrolling';
@@ -134,6 +131,55 @@ function ($, window) {
     return result;
   };
 
+  var dispatchEvent = function (scrolling) {
+    return function (i, mapped) {
+      var e_appear_disappear;
+      var e_change = jQuery.Event(EV_POSTIONCHANGE);
+      var child = mapped.child;
+      var $elm = $(child.elm);
+      var s = $.extend({}, scrolling);
+      s.position = child.position;
+
+      e_change.scrolling = s;
+      $elm.triggerHandler(e_change);
+
+      if (mapped.event_ad) {
+        if (child.in_view) {
+          e_appear_disappear = jQuery.Event(EV_APPEAR);
+        }
+        else {
+          e_appear_disappear = jQuery.Event(EV_DISAPPEAR);
+        }
+        e_appear_disappear.scrolling = s;
+        $elm.triggerHandler(e_appear_disappear);
+      }
+    }
+  };
+
+  var findChanged = function (parent) {
+    return function (child, i) {
+      var result = undefined;
+      var pos = findPosition(parent, child.top, child.bottom);
+      if (child.position !== pos) {
+        result = {child: child};
+        child.position = pos;
+        if (pos > VIEW_OUT) {
+          if (!child.in_view) {
+            child.in_view = true;
+            result.event_ad = true;
+          }
+        }
+        else {
+          if (child.in_view) {
+            child.in_view = false;
+            result.event_ad = true;
+          }
+        }
+      }
+      return result;
+    };
+  };
+
   // =========================
 
   var Scroller = function (parent) {
@@ -147,8 +193,6 @@ function ($, window) {
     this.handler_tailing = false;
     this.tailing_function = $.proxy(this.tail, this);
     this.tailing_event = null;
-
-    this.proxy_findChanged = $.proxy(this.findChanged, this);
 
     $p.on('scroll', $.proxy(this.onscroll, this));
     // for iOS
@@ -209,59 +253,9 @@ function ($, window) {
     }
 
     // FIXME 
-    var re = $.map(this.children, this.proxy_findChanged);
-    console.log('mapped: ', re);
+    var re = $.map(this.children, findChanged(this.parent));
+    // console.log('mapped: ', re);
     $.each(re, dispatchEvent(scrolling));
-  };
-
-  var dispatchEvent = function (scrolling) {
-    return function (i, mapped) {
-      var e_appear_disappear;
-      var e_change = jQuery.Event(EV_POSTIONCHANGE);
-      console.log('dispatching!: ', mapped);
-      var child = mapped.child;
-      var $elm = $(child.elm);
-      var s = $.extend({}, scrolling);
-
-      s.position = child.position;
-      e_change.scrolling = s;
-
-      $elm.triggerHandler(e_change);
-
-      if (mapped.event_ad) {
-        if (child.in_view) {
-          e_appear_disappear = jQuery.Event(EV_APPEAR);
-        }
-        else {
-          e_appear_disappear = jQuery.Event(EV_DISAPPEAR);
-        }
-        e_appear_disappear.scrolling = s;
-        $elm.triggerHandler(e_appear_disappear);
-      }
-    }
-  };
-
-  // I wish js can take multiple value return... but it may be the same?
-  Scroller.prototype.findChanged = function (child, i) {
-    var result = undefined;
-    var pos = findPosition(this.parent, child.top, child.bottom);
-    if (child.position !== pos) {
-      result = {child: child};
-      child.position = pos;
-      if (pos > VIEW_OUT) {
-        if (!child.in_view) {
-          child.in_view = true;
-          result.event_ad = true;
-        }
-      }
-      else {
-        if (child.in_view) {
-          child.in_view = false;
-          result.event_ad = true;
-        }
-      }
-    }
-    return result;
   };
 
   Scroller.prototype.refresh = function () {
