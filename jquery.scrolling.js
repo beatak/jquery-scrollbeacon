@@ -17,9 +17,10 @@ function ($, window) {
     positionchange: null
   };
 
-  var EV_POSTIONCHANGE = 'positionchange.scrolling';
   var EV_APPEAR = 'appear.scrolling';
   var EV_DISAPPEAR = 'disappear.scrolling';
+  var EV_POSTIONCHANGE = 'positionchange.scrolling';
+  var SCROLLING_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
 
   var VIEW_OUT = 0;
   var VIEW_CLIP_TOP = 4;
@@ -61,13 +62,19 @@ function ($, window) {
 
     var methods = {
       init: function (i, elm) {
-        var $elm = $(elm);
-        console.log('scrolling::init ', i);
         scroller.add(elm, opts);
         return this;
       },
       refresh: function (i, elm) {
-        console.log('scrolling::refresh');
+        // console.log('scrolling::refresh');
+        var target = $(elm).data('scrolling');
+        if (target) {
+          target.refresh();
+        }
+        else {
+          scroller.add(elm, opts);
+        }
+        return this;
       }
     };
 
@@ -86,27 +93,64 @@ function ($, window) {
     this.handler_tailing = false;
     this.tailing_function = $.proxy(this._tail, this);
     this.tailing_event = null;
+    this.event_subscription = {};
+    this.proxy_onscroll = $.proxy(this._onscroll, this);
 
     $elm.data('scroller', this);
-
-    $elm.on('scroll', $.proxy(this._onscroll, this));
-    $elm.bind('touchmove', $.proxy(this._onscroll, this)); // for iOS
   };
+
+
+  Scroller.prototype.checkEventStatus = function (elm, event_type, direction, isScroller) {
+    var $elm = $(elm);
+    var elmid = getElementId($elm);
+    var events = $elm.data('events');
+    if (isScroller) {
+      if (direction) {
+        this.event_subscription[ [elmid, '/', event_type].join('') ] = true;
+      }
+      else {
+        delete this.event_subscription[ [elmid, '/', event_type].join('') ];
+      }
+    }
+    else {
+      if (direction) {
+        this.event_subscription[ [elmid, '/', event_type].join('') ] = true;
+      }
+      else if (events === undefined || !events[event_type]) {
+        delete this.event_subscription[ [elmid, '/', event_type].join('') ];
+      }
+    }
+    var isOn = $.map(this.event_subscription, function () {return 1});
+    if (isOn.length) {
+      if (events === undefined || !events.scroll) {
+        $elm.on('scroll touchmove', this.proxy_onscroll);
+      }
+    }
+    else {
+      if (events && events.scroll) {
+        $elm.off('scroll touchmove', this.proxy_onscroll);
+      }
+    }
+  };
+
 
   Scroller.prototype.setScrollTick = function (func) {
     if (typeof func === 'function') {
       this.scrolltick = func;
-    }    
+      this.checkEventStatus(this.elm, 'scrolltick', true, true);
+    }
     return this;
   };
 
   Scroller.prototype.removeScrollTick = function () {
     this.scrolltick = null;
+    this.checkEventStatus(this.elm, 'scrolltick', false, true);
     return this;
   };
 
-  Scroller.prototype.hookEventBinding = function (direction, type, target) {
-    console.log('Scroller::hookEventBinding: ', type, direction);
+  Scroller.prototype.hookEventBinding = function (target, type, direction) {
+    // console.log('Scroller::hookEventBinding: ', type, direction);
+    this.checkEventStatus(target.elm, type, direction);
     return this;
   };
 
@@ -116,8 +160,13 @@ function ($, window) {
   };
 
   Scroller.prototype.refresh = function () {
-    // refresh all elements position
-    console.log('implement me!');
+    // console.log('Scroller#refresh');
+    $.each(
+      this.targets,
+      function (i, target) {
+        target.refresh();
+      }
+    );
     return this;
   };
 
@@ -157,27 +206,24 @@ function ($, window) {
       this.scrolltick(ev);
     }
 
-    // FIXME 
-    var re = $.map(this.targets, findChanged(this.elm));
-    // console.log('mapped: ', re);
-    $.each(re, dispatchEvent(scrolling));
+    $.each($.map(this.targets, findChanged(this.elm)), dispatchEvent(scrolling));
   };
 
   // =============================================
 
   var MovingTarget = function (scroller, elm, opts) {
     var $elm = $(elm);
-    var top = Math.round($elm.offset().top + opts.offset_t);
-    var bottom = top + Math.round($elm.outerHeight(true) + opts.offset_b);
-    var pos = findPosition(scroller.elm, top, bottom);
+    var top_bottom = getTopBottom($elm, opts.offset_t, opts.offset_b);
+    var pos = findPosition(scroller.elm, top_bottom.top, top_bottom.bottom);
+    this.parent = scroller.elm;
     this.elm = elm;
     this.scroller = scroller;
-    this.position = pos;
-    this.in_view = (pos > VIEW_OUT);
-    this.top = top;
-    this.bottom = bottom;
     this.offset_t = opts.offset_t;
     this.offset_b = opts.offset_b;
+    this.top = top_bottom.top;
+    this.bottom = top_bottom.bottom;
+    this.position = pos;
+    this.in_view = (pos > VIEW_OUT);
 
     $elm.data('scrolling', this);
 
@@ -193,14 +239,42 @@ function ($, window) {
   };
 
   MovingTarget.prototype.remove = function () {
+    var $elm = $(this.elm);
+    $.each(
+      SCROLLING_EVENTS,
+      function (i, str) {
+        $elm.off(str);
+      }
+    );
     return this;
   };
 
   MovingTarget.prototype.refresh = function () {
+    var tb = getTopBottom($(this.elm), this.offset_t, this.offset_b);
+    var pos = findPosition(this.parent, tb.top, tb.bottom);
+    this.top = tb.top;
+    this.bottom = tb.bottom;
+    this.position = pos;
+    this.in_view = (pos > VIEW_OUT);
     return this;
   };
 
   // =========================
+
+  var getTopBottom = function ($elm, offset_t, offset_b) {
+    var result = {top: Math.round($elm.offset().top + offset_t)};
+    result.bottom = result.top + Math.round($elm.outerHeight(true) + offset_b);
+    return result;
+  };
+
+  var getElementId = function ($elm) {
+    var id = $elm.data('scrolling_elementid');
+    if (!id) {
+      id = 'se_' + (new Date()).valueOf();
+      $elm.data('scrolling_elementid', id);
+    }
+    return id;
+  };
 
   var getNow = function () {
     return (new Date()).valueOf();
@@ -291,43 +365,28 @@ function ($, window) {
 
   // =============================================
 
-jQuery.event.special['appear'] = {
-  // setup: function( data, namespaces, handler ) {
-  //   // when you multiple binding, called once per an element
-  //   console.log('appear::setup');
-  //   console.log(arguments);
-  //   console.log(this);
-  // },
-
-  add: function( handlerObj ) {
-    // called for each bound handler
-    if (handlerObj.namespace === 'scrolling') {
-      var target = $(this).data('scrolling');
-      target.scroller.hookEventBinding(true, 'appear', target);
+  $.each(
+    SCROLLING_EVENTS,
+    function (i, str) {
+      var arr = str.split('.');
+      var type = arr.shift();
+      var ns = arr.join('.');
+      $.event.special[type] = {
+        add: function (handlerObj) {
+          var target = $(this).data(ns);
+          if (target) {
+            target.scroller.hookEventBinding(target, type, true);
+          }
+        },
+        remove: function (handlerObj) {
+          var target = $(this).data(ns);
+          if (target) {
+            target.scroller.hookEventBinding(target, type, false);
+          }
+        }
+      };
     }
-  },
-
-  remove: function( handlerObj ) {
-    // called for each bound handler
-    if (handlerObj.namespace === 'scrolling') {
-      var target = $(this).data('scrolling');
-      target.scroller.hookEventBinding(false, 'appear', target);
-    }
-  }
-
-  // teardown: function( namespaces ) {
-  //   // called once per an element
-  //   console.log('appear::teardown');
-  //   console.log(arguments);
-  //   console.log(this);
-  // },
-
-  // trigger: function( event ) {
-  //   console.log('appear::trigger');
-  //   console.log(arguments);
-  //   console.log(this);
-  // }
-};
+  );
 
 /***************************************************
 
