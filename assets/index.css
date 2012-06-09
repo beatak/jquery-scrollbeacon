@@ -40,3 +40,48 @@ body {
   right: 200px;
   top: 0;
 }
+
+/* ====================================  */
+
+#infinitescroll {
+}
+
+#infinitescroll body {
+  background-color: #F5F5FF;
+  font-family: "Helvetica Neue",Arial,Helvetica,sans-serif;
+}
+
+#infinitescroll #container,
+#infinitescroll footer {
+  width: 460px;
+  margin: 0 auto;
+}
+
+#infinitescroll h1 {
+  margin-top: 24px;
+  font-size: 28px;
+}
+
+#infinitescroll p {
+  color: #444;
+  line-height: 1.5;
+}
+
+#infinitescroll footer {
+  text-align: center;
+  background-color: #FFF;
+  padding: 10px 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+#infinitescroll footer > a {
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  margin-right: 30px;
+  padding-left: 30px;
+}
+
+#infinitescroll footer > a.loading {
+  background-image: url(throbber.gif);
+}

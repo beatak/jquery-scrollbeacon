@@ -1,5 +1,5 @@
 (function () {
-  "use strict"
+  "use strict";
   var arr = ['#111', '#333', '#666', '#999', '#aaa', '#ccc', '#eee'];
 
   window.init = function () {

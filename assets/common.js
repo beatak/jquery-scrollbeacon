@@ -1,6 +1,6 @@
 (
-function() {
-  "use strict"
+function () {
+  "use strict";
 
   var $mon;
   var $button;
@@ -11,7 +11,9 @@ function() {
     $mon = $('#monitor');
     $button = $('#monitorclear > button');
     $button.click(onbuttonclick);
-    window.init();
+    if (typeof window.init === 'function') {
+      window.init();
+    }
   };
 
   var onbuttonclick = function (ev) {
