@@ -1,9 +1,27 @@
 (function ($, window) {
   "use strict";
 
+  var VIEW_OUT = 0;
+  var VIEW_CLIP_TOP = 4;
+  var VIEW_INTERSECT = 2;
+  var VIEW_CLIP_BOTTOM = 1;
+  var VIEW_OVERLAP = 7;
+
+  var NAMESPACE = 'scrolling';
+  var NAMESPACE_ELMID = NAMESPACE + '_elementid';
+  var EV_APPEAR = 'appear.' + NAMESPACE;
+  var EV_DISAPPEAR = 'disappear.' + NAMESPACE;
+  var EV_POSTIONCHANGE = 'positionchange.' + NAMESPACE;
+  var SCROLLING_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
+
   var scrollers = [];
   var jquery_scrolling = $.scrolling = {
-    every: 34 // 30 fps
+    every: 34, // 30 fps
+    VIEW_OUT: VIEW_OUT,
+    VIEW_CLIP_BOTTOM: VIEW_CLIP_BOTTOM,
+    VIEW_INTERSECT: VIEW_INTERSECT,
+    VIEW_CLIP_TOP: VIEW_CLIP_TOP,
+    VIEW_OVERLAP: VIEW_OVERLAP
   };
 
   var DEFAULT_OPTIONS = {
@@ -15,19 +33,6 @@
     disappear: null,
     positionchange: null
   };
-
-  var NAMESPACE = 'scrolling';
-  var NAMESPACE_ELMID = NAMESPACE + '_elementid';
-  var EV_APPEAR = 'appear.' + NAMESPACE;
-  var EV_DISAPPEAR = 'disappear.' + NAMESPACE;
-  var EV_POSTIONCHANGE = 'positionchange.' + NAMESPACE;
-  var SCROLLING_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
-
-  var VIEW_OUT = 0;
-  var VIEW_CLIP_TOP = 4;
-  var VIEW_INTERSECT = 2;
-  var VIEW_CLIP_BOTTOM = 1;
-  var VIEW_OVERLAP = 7;
 
   /**
    * jQuery.scrolling
