@@ -1,5 +1,4 @@
-(
-function () {
+(function ($, window) {
   "use strict";
 
   var semaphore = false;
@@ -35,7 +34,7 @@ function () {
     semaphore = !semaphore;
     $anch.html(text);
     $anch.data('text', oldtext);
-  }
+  };
 
   var appendText = function () {
     toggleFooter();
@@ -53,4 +52,4 @@ function () {
     $('footer').data('scrolling').refresh();
   };
 
-})();
+})(jQuery, window);

@@ -1,4 +1,4 @@
-(function () {
+(function ($, window) {
   "use strict";
   var arr = ['#111', '#333', '#666', '#999', '#aaa', '#ccc', '#eee'];
 
@@ -36,10 +36,10 @@
   var onappear = function (ev) {
     // console.log('on appear: ', ev);
     logging($(ev.target).data('num'));
-  }
+  };
 
   var ondisappear = function (ev) {
     // console.log('on disappear: ', ev);
     logging($(ev.target).data('num'));
-  }
-})();
+  };
+})(jQuery, window);

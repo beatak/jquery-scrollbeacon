@@ -1,5 +1,4 @@
-(
-function () {
+(function ($, window) {
   "use strict";
 
   var $mon;
@@ -28,4 +27,4 @@ function () {
 
   $(init);
 }
-)();
+)(jQuery, window);
