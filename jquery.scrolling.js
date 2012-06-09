@@ -17,9 +17,11 @@ function ($, window) {
     positionchange: null
   };
 
-  var EV_APPEAR = 'appear.scrolling';
-  var EV_DISAPPEAR = 'disappear.scrolling';
-  var EV_POSTIONCHANGE = 'positionchange.scrolling';
+  var NAMESPACE = 'scrolling';
+  var NAMESPACE_ELMID = NAMESPACE + '_elementid';
+  var EV_APPEAR = 'appear.' + NAMESPACE;
+  var EV_DISAPPEAR = 'disappear.' + NAMESPACE;
+  var EV_POSTIONCHANGE = 'positionchange.' + NAMESPACE;
   var SCROLLING_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
 
   var VIEW_OUT = 0;
@@ -67,7 +69,7 @@ function ($, window) {
       },
       refresh: function (i, elm) {
         // console.log('scrolling::refresh');
-        var target = $(elm).data('scrolling');
+        var target = $(elm).data(NAMESPACE);
         if (target) {
           target.refresh();
         }
@@ -225,7 +227,7 @@ function ($, window) {
     this.position = pos;
     this.in_view = (pos > VIEW_OUT);
 
-    $elm.data('scrolling', this);
+    $elm.data(NAMESPACE, this);
 
     if (typeof opts.positionchange === 'function') {
       $elm.on(EV_POSTIONCHANGE, opts.positionchange);
@@ -268,10 +270,10 @@ function ($, window) {
   };
 
   var getElementId = function ($elm) {
-    var id = $elm.data('scrolling_elementid');
+    var id = $elm.data(NAMESPACE_ELMID);
     if (!id) {
       id = 'se_' + (new Date()).valueOf();
-      $elm.data('scrolling_elementid', id);
+      $elm.data(NAMESPACE_ELMID, id);
     }
     return id;
   };
