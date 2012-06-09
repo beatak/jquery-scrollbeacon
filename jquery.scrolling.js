@@ -125,7 +125,7 @@
         delete this.event_subscription[ [elmid, '/', event_type].join('') ];
       }
     }
-    var isOn = $.map(this.event_subscription, function () {return 1});
+    var isOn = $.map(this.event_subscription, function () {return 1;});
     if (isOn.length) {
       if (events === undefined || !events.scroll) {
         $(this.elm).on('scroll touchmove', this.proxy_onscroll);
@@ -334,12 +334,12 @@
         e_appear_disappear.scrolling = s;
         $elm.triggerHandler(e_appear_disappear);
       }
-    }
+    };
   };
 
   var findChanged = function (parent) {
     return function (target, i) {
-      var result = undefined;
+      var result;
       var pos = findPosition(parent, target.top, target.bottom);
       if (target.position !== pos) {
         result = {target: target};
