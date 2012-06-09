@@ -7,7 +7,6 @@ function () {
   var counter = 0;
 
   window.init = function () {
-    console.log('hihihi');
     mytext = $('#container').html();
     $('footer').scrolling(
       {
