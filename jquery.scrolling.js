@@ -1,5 +1,4 @@
-(
-function ($, window) {
+(function ($, window) {
   "use strict";
 
   var scrollers = [];
@@ -101,8 +100,7 @@ function ($, window) {
     $elm.data('scroller', this);
   };
 
-
-  Scroller.prototype.checkEventStatus = function (elm, event_type, direction, isScroller) {
+  Scroller.prototype.hookEventBinding = function (elm, event_type, direction, isScroller) {
     var $elm = $(elm);
     var elmid = getElementId($elm);
     var events = $elm.data('events');
@@ -125,12 +123,12 @@ function ($, window) {
     var isOn = $.map(this.event_subscription, function () {return 1});
     if (isOn.length) {
       if (events === undefined || !events.scroll) {
-        $elm.on('scroll touchmove', this.proxy_onscroll);
+        $(this.elm).on('scroll touchmove', this.proxy_onscroll);
       }
     }
     else {
       if (events && events.scroll) {
-        $elm.off('scroll touchmove', this.proxy_onscroll);
+        $(this.elm).off('scroll touchmove', this.proxy_onscroll);
       }
     }
   };
@@ -139,20 +137,14 @@ function ($, window) {
   Scroller.prototype.setScrollTick = function (func) {
     if (typeof func === 'function') {
       this.scrolltick = func;
-      this.checkEventStatus(this.elm, 'scrolltick', true, true);
+      this.hookEventBinding(this.elm, 'scrolltick', true, true);
     }
     return this;
   };
 
   Scroller.prototype.removeScrollTick = function () {
     this.scrolltick = null;
-    this.checkEventStatus(this.elm, 'scrolltick', false, true);
-    return this;
-  };
-
-  Scroller.prototype.hookEventBinding = function (target, type, direction) {
-    // console.log('Scroller::hookEventBinding: ', type, direction);
-    this.checkEventStatus(target.elm, type, direction);
+    this.hookEventBinding(this.elm, 'scrolltick', false, true);
     return this;
   };
 
@@ -217,7 +209,6 @@ function ($, window) {
     var $elm = $(elm);
     var top_bottom = getTopBottom($elm, opts.offset_t, opts.offset_b);
     var pos = findPosition(scroller.elm, top_bottom.top, top_bottom.bottom);
-    this.parent = scroller.elm;
     this.elm = elm;
     this.scroller = scroller;
     this.offset_t = opts.offset_t;
@@ -253,7 +244,7 @@ function ($, window) {
 
   MovingTarget.prototype.refresh = function () {
     var tb = getTopBottom($(this.elm), this.offset_t, this.offset_b);
-    var pos = findPosition(this.parent, tb.top, tb.bottom);
+    var pos = findPosition(this.scroller.elm, tb.top, tb.bottom);
     this.top = tb.top;
     this.bottom = tb.bottom;
     this.position = pos;
