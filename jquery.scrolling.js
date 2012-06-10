@@ -268,7 +268,7 @@
   var getElementId = function ($elm) {
     var id = $elm.data(NAMESPACE_ELMID);
     if (!id) {
-      id = 'se_' + (new Date()).valueOf();
+      id = 'se_' + getNow();
       $elm.data(NAMESPACE_ELMID, id);
     }
     return id;
