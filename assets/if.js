@@ -31,6 +31,9 @@
     if (!semaphore) {
       $anch.addClass('loading');
     }
+    else {
+      $anch.removeClass('loading');
+    }
     semaphore = !semaphore;
     $anch.html(text);
     $anch.data('text', oldtext);
