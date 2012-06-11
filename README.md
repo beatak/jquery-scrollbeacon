@@ -1,6 +1,6 @@
-# jQuery.scrolling
+# jQuery.scrollbeacon
 
 ## DEMO
 
-* [basic scrolling](http://beatak.github.com/jquery-scrolling/)
-* [infinite scrolling](http://beatak.github.com/jquery-scrolling/infinitescroll.html)
+* [basic scrolling](http://beatak.github.com/jquery-scrollbeacon/)
+* [infinite scrolling](http://beatak.github.com/jquery-scrollbeacon/infinitescroll.html)
