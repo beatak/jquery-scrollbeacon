@@ -7,15 +7,15 @@
   var VIEW_CLIP_BOTTOM = 1;
   var VIEW_OVERLAP = 7;
 
-  var NAMESPACE = 'scrolling';
+  var NAMESPACE = 'scrollbeacon';
   var NAMESPACE_ELMID = NAMESPACE + '_elementid';
   var EV_APPEAR = 'appear.' + NAMESPACE;
   var EV_DISAPPEAR = 'disappear.' + NAMESPACE;
   var EV_POSTIONCHANGE = 'positionchange.' + NAMESPACE;
-  var SCROLLING_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
+  var SCROLLBEACON_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
 
   var scrollers = [];
-  var jquery_scrolling = $.scrolling = {
+  var jquery_scrollbeacon = $.scrollbeacon = {
     every: 34, // 30 fps
     VIEW_OUT: VIEW_OUT,
     VIEW_CLIP_BOTTOM: VIEW_CLIP_BOTTOM,
@@ -35,11 +35,11 @@
   };
 
   /**
-   * jQuery.scrolling
+   * jQuery.scrollbeacon
    * (c) 2012, Takashi Mizohata
    * MIT
    */
-  $.fn.scrolling = function () {
+  $.fn.scrollbeacon = function () {
     var method;
     var opts;
     var args;
@@ -72,7 +72,7 @@
         return this;
       },
       refresh: function (i, elm) {
-        // console.log('scrolling::refresh');
+        // console.log('scrollbeacon::refresh');
         var target = $(elm).data(NAMESPACE);
         if (target) {
           target.refresh();
@@ -178,7 +178,7 @@
 
   Scroller.prototype._onscroll = function (ev) {
     var now = getNow();
-    if (now - this.last_scroll > jquery_scrolling.every) {
+    if (now - this.last_scroll > jquery_scrollbeacon.every) {
       this.last_scroll = now;
       this._scrollimpl(ev);
       return;
@@ -187,7 +187,7 @@
     if (this.handler_tailing) {
       clearTimeout(this.handler_tailing);
     }
-    this.handler_tailing = setTimeout(this.tailing_function, jquery_scrolling.every / 2 );
+    this.handler_tailing = setTimeout(this.tailing_function, jquery_scrollbeacon.every / 2 );
     this.tailing_event = ev;
   };
 
@@ -196,7 +196,7 @@
     var top = $elm.scrollTop();
     var delta = top - this.last_top;
     var direction = (delta >= 0);
-    var scrolling = ev.scrolling = {
+    var scrollbeacon = ev.scrollbeacon = {
       direction: direction,
       delta: delta
     };
@@ -205,7 +205,7 @@
       this.scrolltick(ev);
     }
 
-    $.each($.map(this.targets, findChanged(this.elm)), dispatchEvent(scrolling));
+    $.each($.map(this.targets, findChanged(this.elm)), dispatchEvent(scrollbeacon));
   };
 
   // =============================================
@@ -239,7 +239,7 @@
   MovingTarget.prototype.remove = function () {
     var $elm = $(this.elm);
     $.each(
-      SCROLLING_EVENTS,
+      SCROLLBEACON_EVENTS,
       function (i, str) {
         $elm.off(str);
       }
@@ -312,16 +312,16 @@
     return result;
   };
 
-  var dispatchEvent = function (scrolling) {
+  var dispatchEvent = function (scrollbeacon) {
     return function (i, mapped) {
       var e_appear_disappear;
       var e_change = jQuery.Event(EV_POSTIONCHANGE);
       var target = mapped.target;
       var $elm = $(target.elm);
-      var s = $.extend({}, scrolling);
+      var s = $.extend({}, scrollbeacon);
       s.position = target.position;
 
-      e_change.scrolling = s;
+      e_change.scrollbeacon = s;
       $elm.triggerHandler(e_change);
 
       if (mapped.event_ad) {
@@ -331,7 +331,7 @@
         else {
           e_appear_disappear = jQuery.Event(EV_DISAPPEAR);
         }
-        e_appear_disappear.scrolling = s;
+        e_appear_disappear.scrollbeacon = s;
         $elm.triggerHandler(e_appear_disappear);
       }
     };
@@ -364,7 +364,7 @@
   // =============================================
 
   $.each(
-    SCROLLING_EVENTS,
+    SCROLLBEACON_EVENTS,
     function (i, str) {
       var arr = str.split('.');
       var type = arr.shift();
@@ -389,7 +389,7 @@
 /***************************************************
 
 	// as easy as
-	$('.scrolling').scrolling(
+	$('.scrollbeacon').scrollbeacon(
 		{
 			appear: function (ev) {
 				// do something when it comes into viewport
@@ -401,7 +401,7 @@
 	);
 
 	// if you pass parent, it will attached to the parent
-	$('.scrolling').scrolling(
+	$('.scrollbeacon').scrollbeacon(
 		{
 			parent: '#scroll_parent',
 			appear: function (ev) {
@@ -413,7 +413,7 @@
 	// you can pass ontick
 	// note you can only assign one on scroll per parent.
   // for performance reason
-	$('.scrolling').scrolling(
+	$('.scrollbeacon').scrollbeacon(
 		{
 			scroll: function (ev) {
 				// do something for every time, scroll gets fired,
@@ -423,11 +423,11 @@
 	);
 
 	// you can get a parent by
-	var parent = $('.scrolling').data('scroller');
+	var parent = $('.scrollbeacon').data('scroller');
 	parent.refresh();
 
 	// or call the event
-	$('.scroll').triggerHandler('refresh.scrolling');
+	$('.scroll').triggerHandler('refresh.scrollbeacon');
 
 	// 
 
