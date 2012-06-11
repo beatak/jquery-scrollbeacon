@@ -13,7 +13,7 @@
       }
     );
 
-    $('.yaylist').scrolling(
+    $('.yaylist').scrollbeacon(
       {
         scrolltick: onscrolltick,
         appear: onappear,
@@ -30,7 +30,7 @@
 
   var onscrolltick = function (ev) {
     // console.log(ev);
-    logging(JSON.stringify(ev.scrolling));
+    logging(JSON.stringify(ev.scrollbeacon));
   };
 
   var onappear = function (ev) {

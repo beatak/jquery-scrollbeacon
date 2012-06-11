@@ -7,7 +7,7 @@
 
   window.init = function () {
     mytext = $('#container').html();
-    $('footer').scrolling(
+    $('footer').scrollbeacon(
       {
         positionchange: onpositionchange,
         offset_t: -300
@@ -52,7 +52,7 @@
         $container.append(elm);
       }
     );
-    $('footer').data('scrolling').refresh();
+    $('footer').data('scrollbeacon').refresh();
   };
 
 })(jQuery, window);
