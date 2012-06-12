@@ -18,7 +18,7 @@
   var DIRECTION_UP = 'up';
 
   var scrollers = [];
-  var jquery_scrollbeacon = $.scrollbeacon = {
+  var jquery_scrollbeacon = $[NAMESPACE] = {
     every: 34, // 30 fps
     VIEW_OUT: VIEW_OUT,
     VIEW_CLIP_BOTTOM: VIEW_CLIP_BOTTOM,
@@ -42,7 +42,7 @@
    * (c) 2012, Takashi Mizohata
    * MIT
    */
-  $.fn.scrollbeacon = function () {
+  $.fn[NAMESPACE] = function () {
     var method;
     var opts;
     var args;
@@ -212,7 +212,7 @@
     if (isTailing && delta === 0) {
       return;
     }
-    scrollbeacon = ev.scrollbeacon = {
+    scrollbeacon = ev[NAMESPACE] = {
       direction: ((delta >= 0) ? DIRECTION_DOWN : DIRECTION_UP ),
       delta: delta
     };
@@ -345,25 +345,25 @@
 
   var dispatchEvent = function (scrollbeacon) {
     return function (i, mapped) {
-      var e_appear_disappear;
+      var e_ad; // Appear/Disappear
       var e_change = $.Event(EV_POSTIONCHANGE);
       var target = mapped.target;
       var $elm = $(target.elm);
       var s = $.extend({}, scrollbeacon);
       s.position = target.position;
 
-      e_change.scrollbeacon = s;
+      e_change[NAMESPACE] = s;
       $elm.triggerHandler(e_change);
 
       if (mapped.event_ad) {
         if (target.in_view) {
-          e_appear_disappear = $.Event(EV_APPEAR);
+          e_ad = $.Event(EV_APPEAR);
         }
         else {
-          e_appear_disappear = $.Event(EV_DISAPPEAR);
+          e_ad = $.Event(EV_DISAPPEAR);
         }
-        e_appear_disappear.scrollbeacon = s;
-        $elm.triggerHandler(e_appear_disappear);
+        e_ad[NAMESPACE] = s;
+        $elm.triggerHandler(e_ad);
       }
     };
   };
