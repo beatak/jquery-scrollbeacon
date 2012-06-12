@@ -23,9 +23,19 @@
         scrolltick: onscrolltick,
         appear: onappear,
         disappear: ondisappear,
-        positionchange: onpositionchange
+        positionchange: onpositionchange,
+        topreached: ontopreached,
+        bottomreached: onbottomreached
       }
     );
+  };
+
+  var ontopreached = function (ev) {
+    logging('reached to top: ' + $(ev.target).data('num'));
+  };
+
+  var onbottomreached = function (ev) {
+    logging('reached to bottom: ' + $(ev.target).data('num'));
   };
 
   var onButtonClick = function (ev) {
