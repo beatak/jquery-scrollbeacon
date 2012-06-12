@@ -158,6 +158,16 @@
     return this;
   };
 
+  Scroller.prototype.remove = function (target) {
+    var result = false;
+    var index = $.inArray(target, this.targets);
+    if (index > -1) {
+      result = true;
+      this.targets.splice(index, 1);
+    }
+    return result;
+  };
+
   Scroller.prototype.refresh = function () {
     // console.log('Scroller#refresh');
     $.each(
@@ -236,7 +246,17 @@
     }
   };
 
-  MovingTarget.prototype.remove = function () {
+  MovingTarget.prototype.destroy = function () {
+    var data = $(this.elm).data();
+    this.stop();
+    this.scroller.remove(this);
+    this.elm = null;
+    this.scroller = null;
+    delete data[NAMESPACE];
+    delete data[NAMESPACE_ELMID];
+  };
+
+  MovingTarget.prototype.stop = function () {
     var $elm = $(this.elm);
     $.each(
       SCROLLBEACON_EVENTS,
@@ -259,12 +279,9 @@
 
   // =========================
 
-  var getTopBottom = function ($elm, offset_t, offset_b) {
-    var result = {top: Math.round($elm.offset().top + offset_t)};
-    result.bottom = result.top + Math.round($elm.outerHeight(true) + offset_b);
-    return result;
-  };
-
+  /**
+   * has side effects
+   */
   var getElementId = function ($elm) {
     var id = $elm.data(NAMESPACE_ELMID);
     if (!id) {
@@ -272,6 +289,14 @@
       $elm.data(NAMESPACE_ELMID, id);
     }
     return id;
+  };
+
+  // =========================
+
+  var getTopBottom = function ($elm, offset_t, offset_b) {
+    var result = {top: Math.round($elm.offset().top + offset_t)};
+    result.bottom = result.top + Math.round($elm.outerHeight(true) + offset_b);
+    return result;
   };
 
   var getNow = function () {
@@ -315,7 +340,7 @@
   var dispatchEvent = function (scrollbeacon) {
     return function (i, mapped) {
       var e_appear_disappear;
-      var e_change = jQuery.Event(EV_POSTIONCHANGE);
+      var e_change = $.Event(EV_POSTIONCHANGE);
       var target = mapped.target;
       var $elm = $(target.elm);
       var s = $.extend({}, scrollbeacon);
@@ -326,10 +351,10 @@
 
       if (mapped.event_ad) {
         if (target.in_view) {
-          e_appear_disappear = jQuery.Event(EV_APPEAR);
+          e_appear_disappear = $.Event(EV_APPEAR);
         }
         else {
-          e_appear_disappear = jQuery.Event(EV_DISAPPEAR);
+          e_appear_disappear = $.Event(EV_DISAPPEAR);
         }
         e_appear_disappear.scrollbeacon = s;
         $elm.triggerHandler(e_appear_disappear);
