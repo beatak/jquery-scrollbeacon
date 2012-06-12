@@ -345,7 +345,7 @@
 
   var dispatchEvent = function (scrollbeacon) {
     return function (i, mapped) {
-      var e_appear_disappear;
+      var e_ad; // Appear/Disappear
       var e_change = $.Event(EV_POSTIONCHANGE);
       var target = mapped.target;
       var $elm = $(target.elm);
@@ -357,13 +357,13 @@
 
       if (mapped.event_ad) {
         if (target.in_view) {
-          e_appear_disappear = $.Event(EV_APPEAR);
+          e_ad = $.Event(EV_APPEAR);
         }
         else {
-          e_appear_disappear = $.Event(EV_DISAPPEAR);
+          e_ad = $.Event(EV_DISAPPEAR);
         }
-        e_appear_disappear.scrollbeacon = s;
-        $elm.triggerHandler(e_appear_disappear);
+        e_ad.scrollbeacon = s;
+        $elm.triggerHandler(e_ad);
       }
     };
   };
