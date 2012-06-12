@@ -49,11 +49,11 @@
 
   var onappear = function (ev) {
     // console.log('on appear: ', ev);
-    logging('appear: ', $(ev.target).data('num'));
+    logging('appear: ' +  $(ev.target).data('num'));
   };
 
   var ondisappear = function (ev) {
     // console.log('on disappear: ', ev);
-    logging('disappear: ', $(ev.target).data('num'));
+    logging('disappear: ' +  $(ev.target).data('num'));
   };
 })(jQuery, window);
