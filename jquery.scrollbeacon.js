@@ -79,6 +79,9 @@
           if (opts.offset) {
             target.setOffset(opts.offset);
           }
+          else {
+            target.refresh();
+          }
         }
         else {
           scroller.add(elm, opts);
