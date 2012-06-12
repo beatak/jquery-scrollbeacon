@@ -12,7 +12,10 @@
   var EV_APPEAR = 'appear.' + NAMESPACE;
   var EV_DISAPPEAR = 'disappear.' + NAMESPACE;
   var EV_POSTIONCHANGE = 'positionchange.' + NAMESPACE;
-  var SCROLLBEACON_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
+  var EV_TOPREACHED = 'topreached.' + NAMESPACE;
+  var EV_BOTTOMREACHED = 'bottomreached.' + NAMESPACE;
+  var SCROLLBEACON_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE, EV_TOPREACHED, EV_BOTTOMREACHED];
+  var MOVINGTARGET_EVENTS = $.map(SCROLLBEACON_EVENTS, function (str) {return str.split('.').shift();});
 
   var DIRECTION_DOWN = 'down';
   var DIRECTION_UP = 'up';
@@ -29,8 +32,7 @@
 
   var DEFAULT_OPTIONS = {
     parent: window,
-    offset_t: 0,
-    offset_b: 0,
+    offset: null,
     scrolltick: null,
     appear: null,
     disappear: null,
@@ -71,17 +73,45 @@
 
     var methods = {
       init: function (i, elm) {
-        scroller.add(elm, opts);
+        var target = $(elm).data(NAMESPACE);
+        if (target) {
+          bindMovingTargetEvents(elm, opts);
+          if (opts.offset) {
+            target.setOffset(opts.offset);
+          }
+          else {
+            target.refresh();
+          }
+        }
+        else {
+          scroller.add(elm, opts);
+        }
         return this;
       },
       refresh: function (i, elm) {
-        // console.log('scrollbeacon::refresh');
         var target = $(elm).data(NAMESPACE);
         if (target) {
+          if (opts.offset) {
+            target.setOffset(opts.offset);
+          }
           target.refresh();
         }
         else {
           scroller.add(elm, opts);
+        }
+        return this;
+      },
+      destroy: function (i, elm) {
+        var target = $(elm).data(NAMESPACE);
+        if (target) {
+          target.destroy();
+        }
+        return this;
+      },
+      stop: function (i, elm) {
+        var target = $(elm).data(NAMESPACE);
+        if (target) {
+          target.stop();
         }
         return this;
       }
@@ -157,7 +187,8 @@
   };
 
   Scroller.prototype.add = function (elm, opts) {
-    this.targets[this.targets.length] = new MovingTarget(this, elm, opts);
+    this.targets[this.targets.length] = new MovingTarget(this, elm, opts.offset);
+    bindMovingTargetEvents(elm, opts);
     return this;
   };
 
@@ -221,35 +252,16 @@
       this.scrolltick(ev);
     }
 
-    $.each($.map(this.targets, findChanged(this.elm)), dispatchEvent(scrollbeacon));
+    $.each($.map(this.targets, findChanged(this.elm, delta)), dispatchEvent(scrollbeacon));
   };
 
   // =============================================
 
-  var MovingTarget = function (scroller, elm, opts) {
-    var $elm = $(elm);
-    var top_bottom = getTopBottom($elm, opts.offset_t, opts.offset_b);
-    var pos = findPosition(scroller.elm, top_bottom.top, top_bottom.bottom);
+  var MovingTarget = function (scroller, elm, offset) {
     this.elm = elm;
     this.scroller = scroller;
-    this.offset_t = opts.offset_t;
-    this.offset_b = opts.offset_b;
-    this.top = top_bottom.top;
-    this.bottom = top_bottom.bottom;
-    this.position = pos;
-    this.in_view = (pos > VIEW_OUT);
-
-    $elm.data(NAMESPACE, this);
-
-    if (typeof opts.positionchange === 'function') {
-      $elm.on(EV_POSTIONCHANGE, opts.positionchange);
-    }
-    if (typeof opts.appear === 'function') {
-      $elm.on(EV_APPEAR, opts.appear);
-    }
-    if (typeof opts.disappear === 'function') {
-      $elm.on(EV_DISAPPEAR, opts.disappear);
-    }
+    this.setOffset(offset);
+    $(elm).data(NAMESPACE, this);
   };
 
   MovingTarget.prototype.destroy = function () {
@@ -274,12 +286,27 @@
   };
 
   MovingTarget.prototype.refresh = function () {
-    var tb = getTopBottom($(this.elm), this.offset_t, this.offset_b);
+    var tb = getTopBottom(this.elm, this.offset_t, this.offset_b);
     var pos = findPosition(this.scroller.elm, tb.top, tb.bottom);
     this.top = tb.top;
     this.bottom = tb.bottom;
     this.position = pos;
     this.in_view = (pos > VIEW_OUT);
+    return this;
+  };
+
+  MovingTarget.prototype.setOffset = function (obj) {
+    var offset = getOffset(obj);
+    var top_bottom = getTopBottom(this.elm, offset.top, offset.bottom);
+    var pos = findPosition(this.scroller.elm, top_bottom.top, top_bottom.bottom);
+
+    this.offset_t = offset.top;
+    this.offset_b = offset.bottom;
+    this.top = top_bottom.top;
+    this.bottom = top_bottom.bottom;
+    this.position = pos;
+    this.in_view = (pos > VIEW_OUT);
+
     return this;
   };
 
@@ -297,9 +324,68 @@
     return id;
   };
 
+
+  /**
+   * has side effects
+   */
+  var bindMovingTargetEvents = function (elm, opts) {
+    var $elm = $(elm);
+    $.each(
+      MOVINGTARGET_EVENTS,
+      function (i) {
+        if (typeof opts[this] === 'function') {
+          $elm.on([this, NAMESPACE].join('.'), opts[this]); 
+        }
+      }
+    );
+  };
+
   // =========================
 
-  var getTopBottom = function ($elm, offset_t, offset_b) {
+  var getOffset = function (v) {
+    var top, bottom;
+    var type = typeof(v);
+    if (type === 'number') {
+      top = bottom = v;
+    }
+    else if (type === 'string') {
+      top = bottom = getInt(v);
+    }
+    else if (type === 'undefined' || type === 'function') {
+      top = bottom = 0;
+    }
+    else if (type === 'boolean') {
+      top = bottom = (v ? 1 : 0);
+    }
+    else {
+      if (v === null) {
+        top = bottom = 0;
+      }
+      else if (Object.prototype.toString.apply(v) === '[object Array]') {
+        top = getInt(v[0]);
+        bottom = getInt(v[1]);
+      }
+      else {
+        top = getInt(v.top);
+        bottom = getInt(v.bottom);
+      }
+    }
+    return {top: top, bottom: bottom};
+  };
+
+  var getInt = function (val, def, rad) {
+    var result;
+    rad = rad || 10;
+    def = def || 0;
+    result = parseInt(val, rad);
+    if (isNaN(result)) {
+      result = def;
+    }
+    return result;
+  };
+
+  var getTopBottom = function (elm, offset_t, offset_b) {
+    var $elm = $(elm);
     var result = {top: Math.round($elm.offset().top + offset_t)};
     result.bottom = result.top + Math.round($elm.outerHeight(true) + offset_b);
     return result;
@@ -346,15 +432,26 @@
   var dispatchEvent = function (scrollbeacon) {
     return function (i, mapped) {
       var e_ad; // Appear/Disappear
+      var e_reached; // top reached / bottom reached
       var e_change = $.Event(EV_POSTIONCHANGE);
       var target = mapped.target;
       var $elm = $(target.elm);
       var s = $.extend({}, scrollbeacon);
-      s.position = target.position;
 
+      s.position = target.position;
       e_change[NAMESPACE] = s;
       $elm.triggerHandler(e_change);
 
+      if (mapped.event_tr) {
+        e_reached = $.Event(EV_TOPREACHED);
+        e_reached[NAMESPACE] = s;
+        $elm.triggerHandler(e_reached);
+      }
+      if (mapped.event_br) {
+        e_reached = $.Event(EV_BOTTOMREACHED);
+        e_reached[NAMESPACE] = s;
+        $elm.triggerHandler(e_reached);
+      }
       if (mapped.event_ad) {
         if (target.in_view) {
           e_ad = $.Event(EV_APPEAR);
@@ -368,12 +465,33 @@
     };
   };
 
-  var findChanged = function (parent) {
+  var findChanged = function (parent, delta) {
     return function (target, i) {
       var result;
       var pos = findPosition(parent, target.top, target.bottom);
-      if (target.position !== pos) {
+      var tp = target.position;
+      if (tp !== pos) {
         result = {target: target};
+        if (delta > 0) {
+          if ( (VIEW_OUT < tp && tp < VIEW_CLIP_TOP) && (pos === VIEW_OUT || pos === VIEW_CLIP_TOP || pos === VIEW_OVERLAP) ) {
+            // A
+            result.event_tr = true;
+          }
+          else if ( (VIEW_CLIP_BOTTOM < pos && pos < VIEW_OVERLAP) && (tp === VIEW_OUT || tp === VIEW_CLIP_BOTTOM || tp === VIEW_OVERLAP)) {
+            // B
+            result.event_br = true;
+          }
+        }
+        else if (delta < 0) {
+          if ( (VIEW_OUT < pos && pos < VIEW_CLIP_TOP) && (tp === VIEW_OUT || tp === VIEW_CLIP_TOP || tp === VIEW_OVERLAP) ) {
+            // C 
+            result.event_tr = true;
+          }
+          else if ( (VIEW_OUT < tp && tp < VIEW_OVERLAP) && (pos === VIEW_OUT || pos === VIEW_CLIP_BOTTOM || pos === VIEW_OVERLAP) ) {
+            // D
+            result.event_br = true;
+          }
+        }
         target.position = pos;
         if (pos > VIEW_OUT) {
           if (!target.in_view) {
