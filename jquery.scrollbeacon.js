@@ -14,6 +14,9 @@
   var EV_POSTIONCHANGE = 'positionchange.' + NAMESPACE;
   var SCROLLBEACON_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
 
+  var DIRECTION_DOWN = 'down';
+  var DIRECTION_UP = 'up';
+
   var scrollers = [];
   var jquery_scrollbeacon = $.scrollbeacon = {
     every: 34, // 30 fps
@@ -183,7 +186,7 @@
     var tailev = this.tailing_event;
     this.handler_tailing = false;
     this.tailing_event = null;
-    this._scrollimpl(tailev);
+    this._scrollimpl(tailev, true);
   };
 
   Scroller.prototype._onscroll = function (ev) {
@@ -197,17 +200,20 @@
     if (this.handler_tailing) {
       clearTimeout(this.handler_tailing);
     }
-    this.handler_tailing = setTimeout(this.tailing_function, jquery_scrollbeacon.every / 2 );
+    this.handler_tailing = setTimeout(this.tailing_function, jquery_scrollbeacon.every * 1.25 );
     this.tailing_event = ev;
   };
 
-  Scroller.prototype._scrollimpl = function (ev) {
+  Scroller.prototype._scrollimpl = function (ev, isTailing) {
+    var scrollbeacon;
     var $elm = $(this.elm);
     var top = $elm.scrollTop();
     var delta = top - this.last_top;
-    var direction = (delta >= 0);
-    var scrollbeacon = ev.scrollbeacon = {
-      direction: direction,
+    if (isTailing && delta === 0) {
+      return;
+    }
+    scrollbeacon = ev.scrollbeacon = {
+      direction: ((delta >= 0) ? DIRECTION_DOWN : DIRECTION_UP ),
       delta: delta
     };
     this.last_top = top;
@@ -435,12 +441,12 @@
 		}
 	);
 
-	// you can pass ontick
+	// you can pass scrolltick
 	// note you can only assign one on scroll per parent.
-  // for performance reason
+	// for performance reason
 	$('.scrollbeacon').scrollbeacon(
 		{
-			scroll: function (ev) {
+			scrolltick: function (ev) {
 				// do something for every time, scroll gets fired,
 				// as throttled
 			}
