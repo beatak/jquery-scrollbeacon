@@ -435,12 +435,12 @@
 		}
 	);
 
-	// you can pass ontick
+	// you can pass scrolltick
 	// note you can only assign one on scroll per parent.
-  // for performance reason
+	// for performance reason
 	$('.scrollbeacon').scrollbeacon(
 		{
-			scroll: function (ev) {
+			scrolltick: function (ev) {
 				// do something for every time, scroll gets fired,
 				// as throttled
 			}
