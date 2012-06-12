@@ -12,7 +12,10 @@
   var EV_APPEAR = 'appear.' + NAMESPACE;
   var EV_DISAPPEAR = 'disappear.' + NAMESPACE;
   var EV_POSTIONCHANGE = 'positionchange.' + NAMESPACE;
-  var SCROLLBEACON_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE];
+  var EV_TOPREACHED = 'topreached.' + NAMESPACE;
+  var EV_BOTTOMREACHED = 'bottomreached.' + NAMESPACE;
+  var SCROLLBEACON_EVENTS = [EV_APPEAR, EV_DISAPPEAR, EV_POSTIONCHANGE, EV_TOPREACHED, EV_BOTTOMREACHED];
+  var MOVINGTARGET_EVENTS = $.map(SCROLLBEACON_EVENTS, function (str) {return str.split('.').shift();});
 
   var DIRECTION_DOWN = 'down';
   var DIRECTION_UP = 'up';
@@ -221,7 +224,7 @@
       this.scrolltick(ev);
     }
 
-    $.each($.map(this.targets, findChanged(this.elm)), dispatchEvent(scrollbeacon));
+    $.each($.map(this.targets, findChanged(this.elm, delta)), dispatchEvent(scrollbeacon));
   };
 
   // =============================================
@@ -241,15 +244,14 @@
 
     $elm.data(NAMESPACE, this);
 
-    if (typeof opts.positionchange === 'function') {
-      $elm.on(EV_POSTIONCHANGE, opts.positionchange);
-    }
-    if (typeof opts.appear === 'function') {
-      $elm.on(EV_APPEAR, opts.appear);
-    }
-    if (typeof opts.disappear === 'function') {
-      $elm.on(EV_DISAPPEAR, opts.disappear);
-    }
+    $.each(
+      MOVINGTARGET_EVENTS,
+      function (i) {
+        if (typeof opts[this] === 'function') {
+          $elm.on([this, NAMESPACE].join('.'), opts[this]); 
+        }
+      }
+    );
   };
 
   MovingTarget.prototype.destroy = function () {
@@ -346,15 +348,26 @@
   var dispatchEvent = function (scrollbeacon) {
     return function (i, mapped) {
       var e_ad; // Appear/Disappear
+      var e_reached; // top reached / bottom reached
       var e_change = $.Event(EV_POSTIONCHANGE);
       var target = mapped.target;
       var $elm = $(target.elm);
       var s = $.extend({}, scrollbeacon);
-      s.position = target.position;
 
+      s.position = target.position;
       e_change[NAMESPACE] = s;
       $elm.triggerHandler(e_change);
 
+      if (mapped.event_tr) {
+        e_reached = $.Event(EV_TOPREACHED);
+        e_reached[NAMESPACE] = s;
+        $elm.triggerHandler(e_reached);
+      }
+      if (mapped.event_br) {
+        e_reached = $.Event(EV_BOTTOMREACHED);
+        e_reached[NAMESPACE] = s;
+        $elm.triggerHandler(e_reached);
+      }
       if (mapped.event_ad) {
         if (target.in_view) {
           e_ad = $.Event(EV_APPEAR);
@@ -368,12 +381,33 @@
     };
   };
 
-  var findChanged = function (parent) {
+  var findChanged = function (parent, delta) {
     return function (target, i) {
       var result;
       var pos = findPosition(parent, target.top, target.bottom);
-      if (target.position !== pos) {
+      var tp = target.position;
+      if (tp !== pos) {
         result = {target: target};
+        if (delta > 0) {
+          if ( (VIEW_OUT < tp && tp < VIEW_CLIP_TOP) && (pos === VIEW_OUT || pos === VIEW_CLIP_TOP || pos === VIEW_OVERLAP) ) {
+            // A
+            result.event_tr = true;
+          }
+          else if ( (VIEW_CLIP_BOTTOM < pos && pos < VIEW_OVERLAP) && (tp === VIEW_OUT || tp === VIEW_CLIP_BOTTOM || tp === VIEW_OVERLAP)) {
+            // B
+            result.event_br = true;
+          }
+        }
+        else if (delta < 0) {
+          if ( (VIEW_OUT < pos && pos < VIEW_CLIP_TOP) && (tp === VIEW_OUT || tp === VIEW_CLIP_TOP || tp === VIEW_OVERLAP) ) {
+            // C 
+            result.event_tr = true;
+          }
+          else if ( (VIEW_OUT < tp && tp < VIEW_OVERLAP) && (pos === VIEW_OUT || pos === VIEW_CLIP_BOTTOM || pos === VIEW_OVERLAP) ) {
+            // D
+            result.event_br = true;
+          }
+        }
         target.position = pos;
         if (pos > VIEW_OUT) {
           if (!target.in_view) {
