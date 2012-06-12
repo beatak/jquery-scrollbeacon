@@ -108,7 +108,7 @@
     $elm.data('scroller', this);
   };
 
-  Scroller.prototype.hookEventBinding = function (elm, event_type, direction, isScroller) {
+  Scroller.prototype._hookEventBinding = function (elm, event_type, direction, isScroller) {
     var $elm = $(elm);
     var elmid = getElementId($elm);
     var events = $elm.data('events');
@@ -145,14 +145,14 @@
   Scroller.prototype.setScrollTick = function (func) {
     if (typeof func === 'function') {
       this.scrolltick = func;
-      this.hookEventBinding(this.elm, 'scrolltick', true, true);
+      this._hookEventBinding(this.elm, 'scrolltick', true, true);
     }
     return this;
   };
 
   Scroller.prototype.removeScrollTick = function () {
     this.scrolltick = null;
-    this.hookEventBinding(this.elm, 'scrolltick', false, true);
+    this._hookEventBinding(this.elm, 'scrolltick', false, true);
     return this;
   };
 
@@ -404,13 +404,13 @@
         add: function (handlerObj) {
           var target = $(this).data(ns);
           if (target) {
-            target.scroller.hookEventBinding(target, type, true);
+            target.scroller._hookEventBinding(target, type, true);
           }
         },
         remove: function (handlerObj) {
           var target = $(this).data(ns);
           if (target) {
-            target.scroller.hookEventBinding(target, type, false);
+            target.scroller._hookEventBinding(target, type, false);
           }
         }
       };
