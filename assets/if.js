@@ -17,7 +17,7 @@
 
   var onpositionchange = function (ev) {
     if (semaphore === false) {
-      logging('psoition change: ' + counter);
+      logging('position change: ' + counter);
       toggleFooter();
       setTimeout(appendText, 500);
     }
