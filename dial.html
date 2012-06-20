@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html id="dial">
+<head>
+  <title>Dial controls with jQuery#scrollbeacon</title>
+  <link rel="stylesheet" href="assets/index.css" type="text/css" />
+</head>
+<body>
+
+  <div id="container" class="clearfix">
+	  <hgroup>
+		  <h1>Dial Controls</h1>
+		  <h2>An example of <a href="http://github.com/beatak/jquery-scrollbeacon/">jQuery#scrollbeacon</a> within scrollable non-window elements</h2>
+	  </hgroup>
+	  
+	  <div class="dial-wrap">
+		  <h2>Font Size:</h2>
+		  <ul class="dial font" data-property="font">
+        <li class="filler">&nbsp;</li>
+			  <li data-value="8">8px</li>
+			  <li data-value="10">10px</li>
+			  <li data-value="12">12px</li>
+			  <li data-value="14">14px</li>
+			  <li data-value="16">16px</li>
+			  <li data-value="18">18px</li>
+			  <li data-value="24">24px</li>
+			  <li data-value="36">36px</li>
+			  <li data-value="48">48px</li>
+			  <li data-value="72">72px</li>
+        <li class="filler">&nbsp;</li>
+		  </ul>
+	  </div>
+	  
+	  <div class="dial-wrap">
+		  <h2>Width:</h2>
+		  <ul class="dial width" data-property="width">
+        <li class="filler">&nbsp;</li>
+			  <li data-value="150">150px</li>
+			  <li data-value="200">200px</li>
+			  <li data-value="250">250px</li>
+			  <li data-value="300">300px</li>
+			  <li data-value="350">350px</li>
+			  <li data-value="400">400px</li>
+			  <li data-value="500">500px</li>
+			  <li data-value="600">600px</li>
+			  <li data-value="700">700px</li>
+			  <li data-value="800">800px</li>
+			  <li data-value="1024">1024px</li>
+			  <li data-value="1280">1280px</li>
+        <li class="filler">&nbsp;</li>
+		  </ul>
+	  </div>
+	  
+	  <div class="dial-wrap">
+		  <h2>BG Color:</h2>
+		  <ul class="dial color" data-property="bg">
+        <li class="filler">&nbsp;</li>
+        <li data-value="#fff" data-index="0">#fff</li>
+			  <li data-value="#d1f2a5" data-index="1">#d1f2a5</li>
+			  <li data-value="#effab4" data-index="2">#effab4</li>
+			  <li data-value="#ffc48c" data-index="3">#ffc48c</li>
+			  <li data-value="#ff9f80" data-index="4">#ff9f80</li>
+			  <li data-value="#f56991" data-index="5">#f56991</li>
+        <li class="filler">&nbsp;</li>
+		  </ul>
+	  </div>
+  </div>
+
+  <div id="main" class="font-8 width-150 bg-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit ultrices rutrum. Cras dignissim purus non purus mattis nec lobortis enim dignissim. Nulla a urna est. Proin volutpat odio id velit tempor sollicitudin. Aliquam lobortis nunc gravida orci fringilla in commodo lectus gravida. In hac habitasse platea dictumst. Maecenas tincidunt pulvinar blandit. Suspendisse a diam ligula. Mauris non tellus nisl, in interdum elit. Etiam rhoncus cursus lectus vel venenatis. Nulla facilisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer eleifend imperdiet lectus vitae aliquet. Mauris metus lorem, fermentum vitae malesuada quis, pretium id mi.</div>
+
+  <script type="text/javascript" src="assets/jquery-1.7.1.js"></script>
+  <script type="text/javascript" src="assets/mustache.js"></script>
+  <script type="text/javascript" src="jquery.scrollbeacon.js"></script>
+  <script type="text/javascript" src="assets/common.js"></script>
+  <script type="text/javascript" src="assets/dial.js"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32167502-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</body>
+</html>

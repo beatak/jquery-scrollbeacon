@@ -1,27 +1,10 @@
 body {
-  background-color: #fff00;
-}
-
-#container {
-}
-
-#container > .mylist {
-  padding: 20px 10px;
-  outline: 1px solid #890;
-  list-style-type: none;
-}
-
-#container > .mylist > li {
-  padding: 20px 10px;
-  outline: 1px solid #abc;
-  height: 200px;
-  margin: 0 0 10px 0;
+  font-family: "Helvetica Neue",Arial,Helvetica,sans-serif;
 }
 
 #monitor {
   background-color: rgba(0, 0, 0, 0.5);
   color: #FFFFFF;
-  font-family: helvetica;
   font-size: 12px;
   height: 300px;
   margin: 0;
@@ -41,6 +24,41 @@ body {
   top: 0;
 }
 
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+
+h2 {
+  clear: none;
+}
+
+/* ====================================  */
+
+#allevents {
+}
+
+#allevents body {
+  background-color: #fff00;
+}
+
+#allevents #container > .mylist {
+  padding: 20px 10px;
+  outline: 1px solid #890;
+  list-style-type: none;
+}
+
+#allevents #container > .mylist > li {
+  padding: 20px 10px;
+  outline: 1px solid #abc;
+  height: 200px;
+  margin: 0 0 10px 0;
+}
+
 /* ====================================  */
 
 #infinitescroll {
@@ -48,7 +66,6 @@ body {
 
 #infinitescroll body {
   background-color: #F5F5FF;
-  font-family: "Helvetica Neue",Arial,Helvetica,sans-serif;
 }
 
 #infinitescroll #container,
@@ -84,4 +101,148 @@ body {
 
 #infinitescroll footer > a.loading {
   background-image: url(throbber.gif);
+}
+
+/* ====================================  */
+
+#dial {
+}
+
+#dial body {
+  background-color: #F5F5FF;
+}
+
+#dial #container {
+  width: 810px;
+  margin: 0 auto;
+}
+
+#dial .dial-wrap {
+	float: left;
+	width: 250px;
+	padding-right: 20px;
+	position:relative;
+}
+
+#dial .dial {
+  width: 250px;
+	height: 96px;
+	border: 1px solid #bbb;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+	background: #fff;
+  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#dial .dial > li {
+	height: 24px;
+	font-size: 24px;
+	line-height: 24px;
+	padding: 12px 24px;
+	border-bottom: 1px solid #ddd;
+}
+
+#dial .dial > li.filler {
+	height: 0px;
+	font-size: 0px;
+	line-height: 0px;
+}
+
+#dial #main {
+  margin: 30px auto;
+  padding: 10px;
+  border: 1px solid #999;
+  -moz-transition-property: all;
+}
+
+/* ====================================  */
+
+.font-8 {
+  font-size: 8px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-10 {
+  font-size: 10px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-12 {
+  font-size: 12px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-14 {
+  font-size: 14px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-16 {
+  font-size: 16px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-18 {
+  font-size: 18px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-24 {
+  font-size: 24px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-36 {
+  font-size: 36px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-48 {
+  font-size: 48px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.font-72 {
+  font-size: 72px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+
+.width-150 {
+  width: 150px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-200 {
+  width: 200px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-250 {
+  width: 250px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-300 {
+  width: 300px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-350 {
+  width: 350px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-400 {
+  width: 400px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-500 {
+  width: 500px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-600 {
+  width: 600px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-700 {
+  width: 700px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-800 {
+  width: 800px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-1024 {
+  width: 1024px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.width-1280 {
+  width: 1280px; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+
+.bg-0 {
+  background-color: #FFF; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.bg-1 {
+  background-color: #d1f2a5; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.bg-2 {
+  background-color: #effab4; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.bg-3 {
+  background-color: #ffc48c; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.bg-4 {
+  background-color: #ff9f80; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
+}
+.bg-5 {
+  background-color: #f56991; -webkit-transition: all 1s;-moz-transition: all 1s;-o-transition: all 1s;-ms-transition: all 1s;transition: all 1s;
 }
