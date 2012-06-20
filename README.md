@@ -52,6 +52,7 @@ What you really care is `MovingTarget` instances.
 
 * [basic scrolling](http://beatak.github.com/jquery-scrollbeacon/)
 * [infinite scrolling](http://beatak.github.com/jquery-scrollbeacon/infinitescroll.html)
+* [dial control](http://beatak.github.com/jquery-scrollbeacon/dial.html)
 
 ## Special Thanks
 
