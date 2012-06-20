@@ -16,9 +16,8 @@
   };
 
   var onappear = function (ev) {
-    logging('onappear');
     if (semaphore === false) {
-      logging('adding! ' + counter + ' times');
+      logging('adding text ' + counter + ' times');
       toggleFooter();
       setTimeout(appendText, 250);
     }
