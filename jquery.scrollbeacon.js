@@ -6,6 +6,8 @@
   var VIEW_INTERSECT = 2;
   var VIEW_CLIP_BOTTOM = 1;
   var VIEW_OVERLAP = 7;
+  var VIEW_ABOVE = -2;
+  var VIEW_BELOW = -1;
 
   var NAMESPACE = 'scrollbeacon';
   var NAMESPACE_ELMID = NAMESPACE + '_elementid';
@@ -23,6 +25,8 @@
   var scrollers = [];
   var jquery_scrollbeacon = $[NAMESPACE] = {
     every: 34, // 30 fps
+    VIEW_ABOVE: VIEW_ABOVE,
+    VIEW_BELOW: VIEW_BELOW,
     VIEW_OUT: VIEW_OUT,
     VIEW_CLIP_BOTTOM: VIEW_CLIP_BOTTOM,
     VIEW_INTERSECT: VIEW_INTERSECT,
@@ -402,9 +406,11 @@
     var p_bottom = p_top + $p.height();
     if (t_bottom <= p_top) {
       // target is above viewport
+      result = VIEW_ABOVE;
     }
     else if (p_bottom <= t_top) {
       // target is below viewport
+      result = VIEW_BELOW;
     } 
     else {
       if (t_top <= p_top) {
@@ -472,22 +478,23 @@
       var tp = target.position;
       if (tp !== pos) {
         result = {target: target};
+
         if (delta > 0) {
-          if ( (VIEW_OUT < tp && tp < VIEW_CLIP_TOP) && (pos === VIEW_OUT || pos === VIEW_CLIP_TOP || pos === VIEW_OVERLAP) ) {
+          if ( (tp === VIEW_BELOW || tp === VIEW_CLIP_BOTTOM || tp === VIEW_INTERSECT) && (pos === VIEW_ABOVE || pos === VIEW_CLIP_TOP || pos === VIEW_OVERLAP) ) {
             // A
             result.event_tr = true;
           }
-          else if ( (VIEW_CLIP_BOTTOM < pos && pos < VIEW_OVERLAP) && (tp === VIEW_OUT || tp === VIEW_CLIP_BOTTOM || tp === VIEW_OVERLAP)) {
+          if ( (VIEW_CLIP_BOTTOM < pos && pos < VIEW_OVERLAP) && (tp === VIEW_BELOW || tp === VIEW_CLIP_BOTTOM || tp === VIEW_OVERLAP)) {
             // B
             result.event_br = true;
           }
         }
         else if (delta < 0) {
-          if ( (VIEW_OUT < pos && pos < VIEW_CLIP_TOP) && (tp === VIEW_OUT || tp === VIEW_CLIP_TOP || tp === VIEW_OVERLAP) ) {
+          if ( (pos === VIEW_BELOW || pos === VIEW_CLIP_BOTTOM || pos === VIEW_INTERSECT) && (tp === VIEW_ABOVE || tp === VIEW_CLIP_TOP || tp === VIEW_OVERLAP) ) {
             // C 
             result.event_tr = true;
           }
-          else if ( (VIEW_OUT < tp && tp < VIEW_OVERLAP) && (pos === VIEW_OUT || pos === VIEW_CLIP_BOTTOM || pos === VIEW_OVERLAP) ) {
+          if ( (VIEW_CLIP_BOTTOM < tp && tp < VIEW_OVERLAP) && (pos === VIEW_BELOW || pos === VIEW_CLIP_BOTTOM || pos === VIEW_OVERLAP) ) {
             // D
             result.event_br = true;
           }
