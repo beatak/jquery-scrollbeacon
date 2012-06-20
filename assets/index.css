@@ -90,6 +90,7 @@ h2 {
   padding: 10px 0;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
+  margin-bottom: 50px;
 }
 
 #infinitescroll footer > a {
