@@ -3,6 +3,12 @@
 jQuery.scrollbeacon is a scroll event utility.
 You can set a target object and receive events when it changes the position to the viewport.
 
+## DEMO
+
+* [basic scrolling](http://beatak.github.com/jquery-scrollbeacon/)
+* [infinite scrolling](http://beatak.github.com/jquery-scrollbeacon/infinitescroll.html)
+* [dial control](http://beatak.github.com/jquery-scrollbeacon/dial.html)
+
 ## Design Concept
 
 * lightweight
@@ -47,12 +53,6 @@ What you really care is `MovingTarget` instances.
     // you can get a parent by
     var parent = $('.scrollbeacon').data('scroller');
     parent.refresh();
-
-## DEMO
-
-* [basic scrolling](http://beatak.github.com/jquery-scrollbeacon/)
-* [infinite scrolling](http://beatak.github.com/jquery-scrollbeacon/infinitescroll.html)
-* [dial control](http://beatak.github.com/jquery-scrollbeacon/dial.html)
 
 ## Special Thanks
 
