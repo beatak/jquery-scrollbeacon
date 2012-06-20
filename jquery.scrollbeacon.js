@@ -52,7 +52,6 @@
     var method;
     var opts;
     var args;
-
     if (typeof arguments[0] === 'string') {
       method = arguments[0];
       opts = $.extend({}, DEFAULT_OPTIONS, arguments[1]|| {});
@@ -67,6 +66,9 @@
     var $parent = $(opts.parent);
     if ($parent.length === 0 || $parent.length > 1) {
       throw new Error('parent has to be a single object.');
+    }
+    if ($parent[0] === document) {
+      throw new Error('parent should not be `document.` Choose `window` or other block element instaed.');
     }
 
     var scroller = $parent.data('scroller');
@@ -290,7 +292,7 @@
   };
 
   MovingTarget.prototype.refresh = function () {
-    var tb = getTopBottom(this.elm, this.offset_t, this.offset_b);
+    var tb = getTopBottom(this.scroller.elm, this.elm, this.offset_t, this.offset_b);
     var pos = findPosition(this.scroller.elm, tb.top, tb.bottom);
     this.top = tb.top;
     this.bottom = tb.bottom;
@@ -301,7 +303,7 @@
 
   MovingTarget.prototype.setOffset = function (obj) {
     var offset = getOffset(obj);
-    var top_bottom = getTopBottom(this.elm, offset.top, offset.bottom);
+    var top_bottom = getTopBottom(this.scroller.elm, this.elm, offset.top, offset.bottom);
     var pos = findPosition(this.scroller.elm, top_bottom.top, top_bottom.bottom);
 
     this.offset_t = offset.top;
@@ -388,9 +390,14 @@
     return result;
   };
 
-  var getTopBottom = function (elm, offset_t, offset_b) {
+  var getTopBottom = function (parent, elm, offset_t, offset_b) {
+    var parentTop = 0;
     var $elm = $(elm);
-    var result = {top: Math.round($elm.offset().top + offset_t)};
+    var result;
+    if (parent !== window) {
+      parentTop = $(parent).offset().top;
+    }
+    result = {top: Math.round($elm.offset().top - parentTop + offset_t)};
     result.bottom = result.top + Math.round($elm.outerHeight(true) + offset_b);
     return result;
   };
