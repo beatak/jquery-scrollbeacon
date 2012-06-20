@@ -9,17 +9,18 @@
     mytext = $('#container').html();
     $('footer').scrollbeacon(
       {
-        positionchange: onpositionchange,
-        offset_t: -300
+        appear: onappear,
+        offset: {top: -300}
       }
     );
   };
 
-  var onpositionchange = function (ev) {
+  var onappear = function (ev) {
+    logging('onappear');
     if (semaphore === false) {
-      logging('position change: ' + counter);
+      logging('adding! ' + counter + ' times');
       toggleFooter();
-      setTimeout(appendText, 500);
+      setTimeout(appendText, 250);
     }
   };
 
