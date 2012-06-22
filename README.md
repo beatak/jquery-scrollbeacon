@@ -1,7 +1,7 @@
-jQuery#scrollbeacon()
+jQuery.scrollbeacon()
 =====================
 
-jQuery#scrollbeacon() makes your scroll event handling easy.
+jQuery.scrollbeacon() makes your scroll event handling easy.
 
 ## DEMO
 
