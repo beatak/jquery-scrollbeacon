@@ -1,13 +1,14 @@
-# jQuery.scrollbeacon
+jQuery.scrollbeacon()
+=====================
 
-jQuery.scrollbeacon is a scroll event utility.
-You can set a target object and receive events when it changes the position to the viewport.
+jQuery.scrollbeacon() makes your scroll event handling easy.
 
 ## DEMO
 
 * [basic scrolling](http://beatak.github.com/jquery-scrollbeacon/)
 * [infinite scrolling](http://beatak.github.com/jquery-scrollbeacon/infinitescroll.html)
 * [dial control](http://beatak.github.com/jquery-scrollbeacon/dial.html)
+* [multi targets](http://beatak.github.com/jquery-scrollbeacon/multitargets.html)
 
 ## Design Concept
 
