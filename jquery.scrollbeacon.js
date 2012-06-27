@@ -193,7 +193,7 @@
   };
 
   Scroller.prototype.add = function (elm, opts) {
-    this.targets[this.targets.length] = new MovingTarget(this, elm, opts.offset);
+    this.targets.push( new MovingTarget(this, elm, opts.offset) );
     bindMovingTargetEvents(elm, opts);
     return this;
   };
