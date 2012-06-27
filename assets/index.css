@@ -467,14 +467,17 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 12px;
 }
 
-#sidebar #container {
+#sidebar #container,
+#sidebar #colophon {
   width: 820px;
-  margin: 0 auto;
-  margin-top: 40px;
+  margin: 40px auto;
+}
+
+#sidebar #container {
+  position: relative;
 }
 
 #sidebar #container .main {
-  margin-bottom: 100px;
   overflow: hidden;
   float: left;
   width: 560px;
@@ -483,10 +486,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #sidebar #container .sidebar {
-  float: right;
   font-size: 12px;
   width: 220px;
   padding: 17px 0;
+  top: 0;
+  right: 0;
+  position: absolute;
 }
 
 #sidebar #container .sidebar ul {
@@ -506,6 +511,21 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid #ccc;
   margin-bottom: 3px;
   width: 202px;
+}
+
+#sidebar #container .sidebar .image {
+  font-size: 0px;
+  line-height: 0px;
+  margin-bottom: 8px;
+}
+
+#sidebar #colophon {
+  font-size: 18px;
+  text-align: center;
+}
+
+#sidebar #colophon .small {
+  font-size: 11px;
 }
 
 #sidebar footer {
