@@ -53,6 +53,10 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
+img {
+  border: none;
+}
+
 /* ====================================  */
 
 #allevents {
@@ -542,3 +546,23 @@ h1, h2, h3, h4, h5, h6 {
   width: 820px;
   margin: 0 auto;
 }
+
+#multitargets footer .iceberg {
+  width: 820px;
+  margin: 0 auto;
+  padding: 0 0 10px;
+  line-height: 12px;
+}
+
+#sidebar footer .under-water{
+  padding: 0 0 10px;
+  line-height: 12px;
+}
+
+#sidebar footer .under-water > li {
+  float: left;
+  padding: 10px 0 0 0;
+  margin-right: 15px;
+}
+
+
