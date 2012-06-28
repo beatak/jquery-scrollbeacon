@@ -40,7 +40,9 @@
     scrolltick: null,
     appear: null,
     disappear: null,
-    positionchange: null
+    positionchange: null,
+    topreached: null,
+    bottomreached: null
   };
 
   /**
