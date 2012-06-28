@@ -1,24 +1,123 @@
 <!DOCTYPE html>
-<html id="allevents">
+<html id="manual">
 <head>
-  <title>Scrolling events sandbox with jQuery#scrollbeacon</title>
-  <link rel="stylesheet" href="assets/index.css" type="text/css" />
+  <title>jQuery.scrollbeacon() makes scroll events easy and intuitive</title>
+  <link rel="stylesheet" href="assets/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="assets/manual.css" type="text/css" />
+  <link rel="stylesheet" href="assets/prettify.css" type="text/css" />
 </head>
-<body class="offline">
-  <h1>
-    All events sample with <a href="http://github.com/beatak/jquery-scrollbeacon">jQuery#scrollbeacon</a>
-  </h1>
+<body>
 
-  <div id='container'>
-    <ul class="mylist">
-    </ul>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="http://twitter.com/beatak">@beatak</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active">
+              <a href="#overview">Overview</a>
+            </li>
+            <li class="">
+              <a href="#demos">Demos</a>
+            </li>
+            <li class="">
+              <a href="#documentation">Documentation</a>
+            </li>
+            <li class="">
+              <a href="#faq">FAQ</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 
+
+  <div class="container">
+    <a class="invisible-anchor" name="overview">&nbsp;</a>
+
+    <header class="jumbotron masthead">
+      <div class="inner">
+        <h1>jQuery.scrollbeacon()</h1>
+        <p>lmakes scroll events easy and intuitive</p>
+        <p class="download-info">
+          <a href="http://github.com/beatak/jquery-scrollbeacon/" class="btn btn-primary btn-large">View project on GitHub</a>
+          <a href="http://github.com/beatak/jquery-scrollbeacon/zipball/master" class="btn btn-large">Download latest</a>
+        </p>
+      </div>
+
+      <div class="bs-links">
+        <ul class="quick-links">
+          <li class="follow-btn">
+            <a href="http://twitter.com/beatak" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @beatak</a>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <hr class="soften" />
+
+    <!-- ========================================================= -->
+
+    <a class="invisible-anchor" name="demos">&nbsp;</a>
+    <section class="examples">
+      <div class="page-header">
+        <h1>Demos</h1>
+      </div>
+
+      <dl>
+        <dt><a href="allevents.html">All events show case</a></dt>
+        <dd>It doesn't do much, but just to see what can happen with jQuery.scrollbeacon().</dd>
+        <dt><a href="infinitescroll.html">Infinite scroll</a></dt>
+        <dd>When you hit to the bottom of the page, let's add more contents.</dd>
+        <dt><a href="dial.html">Dial control</a></dt>
+        <dd>jQuery.scrollbeacon() can handle scroll events on any elements.</dd>
+        <dt><a href="multitargets.html">Multi targets</a></dt>
+        <dd>Page with lots of scrolling elements</dd>
+        <dt><a href="sidebar.html">Sidebar</a></dt>
+        <dd>Page with floating a sidebar</dd>
+      </dl>
+      
+    </section>
+
+    <!-- ========================================================= -->
+
+    <a class="invisible-anchor" name="documentation">&nbsp;</a>
+    <section class="FAQ">
+      <div class="page-header">
+        <h1>Documentation</h1>
+      </div>
+      
+      <pre class="prettyprint linenums lang-js"
+>$('.scrollbeacon').scrollbeacon(
+  {
+    appear: function (ev) { /* do something when it comes into viewport */ },
+    disappear: function (ev) { /* do something when it gets out of viewport */ },
+    topreached: function (ev) { /* when top of elm hits top of viewport */ },
+    bottomreached: function (ev) { /* when bottom of elm hits bottom of viewport */ }
+  }
+);</pre>
+
+    </section>
+
+    <!-- ========================================================= -->
+
+    <a class="invisible-anchor" name="faq">&nbsp;</a>
+    <section class="FAQ">
+      <div class="page-header">
+        <h1>FAQ</h1>
+      </div>
+    </section>
+
+  </div>
+
+  <script type="text/javascript" src="assets/prettify.js"></script>
   <script type="text/javascript" src="assets/jquery-1.7.1.js"></script>
   <script type="text/javascript" src="assets/mustache.js"></script>
   <script type="text/javascript" src="jquery.scrollbeacon.js"></script>
-  <script type="text/javascript" src="assets/common.js"></script>
-  <script type="text/javascript" src="assets/allevents.js"></script>
+  <script type="text/javascript" src="assets/manual.js"></script>
+
+<!-- 
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-32167502-1']);
@@ -29,5 +128,7 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 </script>
+-->
+
 </body>
 </html>
