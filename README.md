@@ -9,6 +9,7 @@ jQuery.scrollbeacon() makes your scroll event handling easy.
 * [infinite scrolling](http://beatak.github.com/jquery-scrollbeacon/infinitescroll.html)
 * [dial control](http://beatak.github.com/jquery-scrollbeacon/dial.html)
 * [multi targets](http://beatak.github.com/jquery-scrollbeacon/multitargets.html)
+* [sidebar](http://beatak.github.com/jquery-scrollbeacon/sidebar.html)
 
 ## Design Concept
 
